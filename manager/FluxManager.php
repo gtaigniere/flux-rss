@@ -40,7 +40,7 @@ class FluxManager
     }
 
     /**
-     * Renvoie le flux dont l'id est passé en paramètre
+     * Renvoie le flux dont l'id est passé en paramètre (sans les articles)
      * @param int $id
      * @return Flux|null
      * @throws Exception Si l'accès au flux a échoué
@@ -123,21 +123,6 @@ class FluxManager
         } else {
             throw new Exception('Aucun flux n\'a été trouvé avec l\'id : ' . $id);
         }
-    }
-
-    /**
-     * Renvoie tous les articles du flux dont l'id est passé en paramètre
-     * @param int $id
-     * @return Article[]
-     * @throws Exception Si l'accès aux articles a échoué
-     */
-    public function allByFlux(int $id): array
-    {
-        $stmt = $this->db->prepare('SELECT * FROM article WHERE rssId = :id');
-        if (!$stmt->execute([':id' => $id])) {
-            throw new Exception('Une erreur est survenue lors de l\'accès à l\'article d\'id : ' . $id);
-        }
-        return $stmt->fetchAll(PDO::FETCH_CLASS, Article::class);
     }
 
 }

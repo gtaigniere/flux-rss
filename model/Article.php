@@ -178,17 +178,17 @@ class Article
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getRssId(): int
+    public function getRssId(): ?int
     {
         return $this->rssId;
     }
 
     /**
-     * @param int $rssId
+     * @param int|null $rssId
      */
-    public function setRssId(int $rssId): void
+    public function setRssId(?int $rssId): void
     {
         $this->rssId = $rssId;
     }

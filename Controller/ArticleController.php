@@ -63,4 +63,15 @@ class ArticleController extends RssController
         }
     }
 
+    /**
+     * Affiche tous les articles du flux dont l'id est passé en paramètre
+     * @param int $id
+     * @throws Exception
+     */
+    public function articlesByFlux(int $id)
+    {
+        $articles = $this->articleManager->articlesByFlux($id);
+        $this->render(ROOT_DIR . 'view/articles.php', compact('articles'));
+    }
+
 }

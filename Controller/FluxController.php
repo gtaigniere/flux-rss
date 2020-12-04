@@ -63,15 +63,4 @@ class FluxController extends RssController
         }
     }
 
-    /**
-     * Affiche tous les articles du flux dont l'id est passé en paramètre
-     * @param int $id
-     * @throws Exception
-     */
-    public function allByFlux(int $id)
-    {
-        $articles = $this->fluxManager->allByFlux($id);
-        $this->render(ROOT_DIR . 'view/articles.php', compact('articles'));
-    }
-
 }
