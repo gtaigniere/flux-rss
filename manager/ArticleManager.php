@@ -58,6 +58,8 @@ class ArticleManager
         return $result;
     }
 
+    // ToDo : Réfléchir à une fonction de trie par critères pour plus tard
+
     /**
      * Ajoute l'article passé en paramètre
      * Renvoie celui-ci s'il a bien été ajouté
@@ -67,7 +69,7 @@ class ArticleManager
      */
     public function insert(Article $article): Article
     {
-        $stmt = $this->db->prepare( 'INSERT INTO article VALUES (:id, :title, :description, :link, :category, :releaseDate, :pictureLink, :rssId)');
+        $stmt = $this->db->prepare( 'INSERT INTO article VALUES (:id, :title, :description, :link, :category, :releaseDate, :pictureLink, :fluxId)');
         $result = $stmt->execute([
             ':id' => $article->getId(),
             ':title' => $article->getTitle(),
@@ -76,7 +78,7 @@ class ArticleManager
             ':category' => $article->getCategory(),
             ':releaseDate' => $article->getReleaseDate(),
             ':pictureLink' => $article->getPictureLink(),
-            ':rssId' => $article->getRssId()
+            ':fluxId' => $article->getFluxId()
         ]);
         if ($result) {
             return $this->one((int)$this->db->lastInsertId());
@@ -94,7 +96,7 @@ class ArticleManager
     public function update(Article $article): Article
     {
         if ($this->one($article->getId())) {
-            $stmt = $this->db->prepare('UPDATE rss SET id = :id, website = :website, description = :description, url = :url, lastBuildDate = :lastBuildDate WHERE id = :id');
+            $stmt = $this->db->prepare('UPDATE article SET id = :id, title = :title, description = :description, link = :link, category = :category, releaseDate = :releaseDate, pictureLink = :pictureLink, fluxId = :fluxId WHERE id = :id');
             $result = $stmt->execute([
                 ':id' => $article->getId(),
                 ':title' => $article->getTitle(),
@@ -103,7 +105,7 @@ class ArticleManager
                 ':category' => $article->getCategory(),
                 ':releaseDate' => $article->getReleaseDate(),
                 ':pictureLink' => $article->getPictureLink(),
-                ':rssId' => $article->getRssId()
+                ':fluxId' => $article->getFluxId()
             ]);
             if ($result) {
                 return $this->one($article->getId());
@@ -138,7 +140,7 @@ class ArticleManager
      */
     public function articlesByFlux(int $id): array
     {
-        $stmt = $this->db->prepare('SELECT * FROM article WHERE rssId = :id');
+        $stmt = $this->db->prepare('SELECT * FROM article WHERE fluxId = :id');
         if (!$stmt->execute([':id' => $id])) {
             throw new Exception('Une erreur est survenue lors de l\'accès à l\'article d\'id : ' . $id);
         }

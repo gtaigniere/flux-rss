@@ -6,6 +6,8 @@ namespace Controller;
 
 use Exception;
 use Manager\FluxManager;
+use Model\Article;
+use Model\Flux;
 use PDO;
 
 /**
@@ -61,6 +63,16 @@ class FluxController extends RssController
         } else {
             // ToDo : Voir quoi faire par la suite
         }
+    }
+
+    /**
+     * @param $url
+     * @throws Exception
+     */
+    public function createFluxFromUrl($url)
+    {
+        $rss = simplexml_load_file($url)->channel;
+        $flux = Flux::flowFromUrl($rss);
     }
 
 }

@@ -56,7 +56,6 @@ class ArticleController extends RssController
     {
         $article = $this->articleManager->one($id);
         if ($article != null) {
-            $article->setReleaseDate($article->getReleaseDate());
             $this->render(ROOT_DIR . 'view/article.php', compact('article'));
         } else {
             // ToDo : Voir quoi faire par la suite

@@ -35,7 +35,11 @@ if (isset($section)) {
         </nav>
     </header>
 
-    <?= $section ?>
+    <main>
+
+        <?= $section ?>
+
+    </main>
 
     <footer class="row">
         <div class="col-md-6">

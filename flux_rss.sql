@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS article (
     category VARCHAR(255) NOT NULL,
     releaseDate DATETIME NOT NULL,
     pictureLink VARCHAR(255) DEFAULT NULL,
-    fluxId INT DEFAULT NULL,
+    fluxId INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_articleFlux FOREIGN KEY (fluxId) REFERENCES flux (id)
 );
