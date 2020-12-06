@@ -3,7 +3,6 @@
 require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 require_once 'config' . DIRECTORY_SEPARATOR . 'config.php';
 
-use Controller\ArticleController;
 use Controller\FluxController;
 
 $sgbdHost = CONFIG['db.driver'] . ':host=' . CONFIG['db.host'] . ';dbname=' . CONFIG['db.name'] . ';charset=UTF8';

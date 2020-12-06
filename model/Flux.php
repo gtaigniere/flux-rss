@@ -15,7 +15,7 @@ class Flux
 {
 
     /**
-     * @var int|null
+     * @var int
      */
     private $id;
 
@@ -47,17 +47,17 @@ class Flux
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param int|null $id
+     * @param int $id
      */
-    public function setId(?int $id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -131,21 +131,6 @@ class Flux
         } else {
             throw new Exception('Une date au format Datetime ou string doit être fournie !');
         }
-    }
-
-    /**
-     * Permet de créer un Flux
-     * @param $rss
-     * @return Flux
-     */
-    public static function flowFromUrl($rss): Flux
-    {
-        $flux = new Flux();
-        $flux->website = $rss->title;
-        $flux->description = $rss->description;
-        $flux->url = $rss->link;
-        $flux->lastBuildDate = $rss->lastBuildDate;
-        return $flux;
     }
 
 }

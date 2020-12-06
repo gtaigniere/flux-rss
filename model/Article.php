@@ -15,7 +15,7 @@ class Article
 {
 
     /***
-     * @var int|null
+     * @var int
      */
     private $id;
 
@@ -50,9 +50,9 @@ class Article
     private $pictureLink;
 
     /**
-     * @var int|null
+     * @var int
      */
-    private $fluxId;
+    private $rssId;
 
     public function __construct()
     {
@@ -139,7 +139,7 @@ class Article
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|string
      */
     public function getReleaseDate(): DateTime
     {
@@ -150,9 +150,15 @@ class Article
      * @param DateTime $releaseDate
      * @throws Exception
      */
-    public function setReleaseDate($releaseDate): void
+    public function setReleaseDate(DateTime $releaseDate): void
     {
-        $this->releaseDate;
+        if ($releaseDate instanceof DateTime) {
+            $this->releaseDate;
+        } elseif (is_string($releaseDate)) {
+            $this->releaseDate = DateTime::createFromFormat('Y-m-d H:i:s', $releaseDate);
+        } else {
+            throw new Exception('Une date au format Datetime ou string doit être fournie !');
+        }
     }
 
     /**
@@ -174,17 +180,17 @@ class Article
     /**
      * @return int|null
      */
-    public function getFluxId(): ?int
+    public function getRssId(): ?int
     {
-        return $this->fluxId;
+        return $this->rssId;
     }
 
     /**
-     * @param int|null $fluxId
+     * @param int|null $rssId
      */
-    public function setFluxId(?int $fluxId): void
+    public function setRssId(?int $rssId): void
     {
-        $this->fluxId = $fluxId;
+        $this->rssId = $rssId;
     }
 
 }

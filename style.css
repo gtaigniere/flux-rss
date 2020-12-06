@@ -1,55 +1,10 @@
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-header {
-    width: 100%;
-}
 .navbar-light {
     background-color: #e3f2fd;
 }
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: center;
-    width: 1080px;
-}
-section {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
 h1 {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     text-align: center;
 }
-.sect-home form {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-.sect-home form input {
-    border: 1px solid lightgrey;
-    border-radius: .25rem;
-    width: calc(100% - 95px);
-}
-.sect-home h2 {
-    margin: 0 20px;
-    font-size: 1.5rem;
-}
-.articles {
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px;
-}
-.article {
-    margin: 10px 0;
-}
 .img-item {
-    margin-right: 12px;
-    float: left;
-    width: 260px;
+    width: 300px;
 }
