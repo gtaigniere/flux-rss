@@ -1,12 +1,11 @@
 <?php
 
 
-namespace Manager;
+namespace App\Manager;
 
 
+use App\Model\Flux;
 use Exception;
-use Model\Article;
-use Model\Flux;
 use PDO;
 
 /**
@@ -51,8 +50,7 @@ class FluxManager
         if (!$stmt->execute([':id' => $id])) {
             throw new Exception('Une erreur est survenue lors de l\'accès au flux d\'id : ' . $id);
         }
-        $stmt->setFetchMode(PDO::FETCH_CLASS, Flux::class);
-        $result = $stmt->fetch();
+        $result = $stmt->fetchObject(Flux::class);
         if (!$result) {
             throw new Exception('Aucun flux n\'a été trouvé avec l\'id : ' . $id);
         }
@@ -68,7 +66,8 @@ class FluxManager
      */
     public function insert(Flux $rss): Flux
     {
-        $stmt = $this->db->prepare( 'INSERT INTO flux VALUES (:id, :website, :description, :url, :lastBuildDate)');
+        $stmt = $this->db->prepare( '
+            INSERT INTO flux VALUES (:id, :website, :description, :url, :lastBuildDate)');
         $result = $stmt->execute([
             ':id' => $rss->getId(),
             ':website' => $rss->getWebsite(),
@@ -92,7 +91,9 @@ class FluxManager
     public function update(Flux $rss): Flux
     {
         if ($this->one($rss->getId())) {
-            $stmt = $this->db->prepare('UPDATE flux SET id = :id, website = :website, description = :description, url = :url, lastBuildDate = :lastBuildDate WHERE id = :id');
+            $stmt = $this->db->prepare('
+                UPDATE flux SET id = :id, website = :website, description = :description,
+                    url = :url, lastBuildDate = :lastBuildDate WHERE id = :id');
             $result = $stmt->execute([
                 ':id' => $rss->getId(),
                 ':website' => $rss->getWebsite(),

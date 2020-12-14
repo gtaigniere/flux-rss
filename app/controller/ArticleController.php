@@ -1,12 +1,14 @@
 <?php
 
 
-namespace Controller;
+namespace App\Controller;
 
 
+use App\{
+    App,
+    Manager\ArticleManager
+};
 use Exception;
-use Manager\ArticleManager;
-use PDO;
 
 /**
  * Class ArticleController
@@ -15,23 +17,17 @@ use PDO;
 class ArticleController extends RssController
 {
     /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
      * @var ArticleManager
      */
     private $articleManager;
 
     /**
      * RssController constructor.
-     * @param PDO $db
      */
-    public function __construct(PDO $db)
+    public function __construct()
     {
         parent::__construct();
-        $this->articleManager = new ArticleManager($db);
+        $this->articleManager = new ArticleManager(App::getInstance()->getDb());
     }
 
     /**
@@ -41,9 +37,6 @@ class ArticleController extends RssController
     public function all()
     {
         $articles = $this->articleManager->all();
-        foreach($articles as $article) {
-            $article->setReleaseDate($article->getReleaseDate());
-        }
         $this->render(ROOT_DIR . 'view/articles.php', compact('articles'));
     }
 
@@ -55,12 +48,7 @@ class ArticleController extends RssController
     public function one($id)
     {
         $article = $this->articleManager->one($id);
-        if ($article != null) {
-            $article->setReleaseDate($article->getReleaseDate());
-            $this->render(ROOT_DIR . 'view/article.php', compact('article'));
-        } else {
-            // ToDo : Voir quoi faire par la suite
-        }
+        $this->render(ROOT_DIR . 'view/article.php', compact('article'));
     }
 
     /**
@@ -68,9 +56,9 @@ class ArticleController extends RssController
      * @param int $id
      * @throws Exception
      */
-    public function articlesByFlux(int $id)
+    public function allByFlux(int $id)
     {
-        $articles = $this->articleManager->articlesByFlux($id);
+        $articles = $this->articleManager->allByFlux($id);
         $this->render(ROOT_DIR . 'view/articles.php', compact('articles'));
     }
 

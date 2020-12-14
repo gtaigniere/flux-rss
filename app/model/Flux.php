@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Model;
+namespace App\Model;
 
 
 use DateTime;
@@ -13,7 +13,6 @@ use Exception;
  */
 class Flux
 {
-
     /**
      * @var int
      */
@@ -111,26 +110,20 @@ class Flux
     }
 
     /**
-     * @return DateTime|string
+     * @return DateTime
+     * @throws Exception
      */
     public function getLastBuildDate()
     {
-        return $this->lastBuildDate;
+        return new DateTime($this->lastBuildDate);
     }
 
     /**
-     * @param DateTime|string $lastBuildDate
-     * @throws Exception
+     * @param DateTime $lastBuildDate
      */
     public function setLastBuildDate($lastBuildDate): void
     {
-        if ($lastBuildDate instanceof DateTime) {
-            $this->lastBuildDate = $lastBuildDate;
-        } elseif (is_string($lastBuildDate)) {
-            $this->lastBuildDate = DateTime::createFromFormat('Y-m-d H:i:s', $lastBuildDate);
-        } else {
-            throw new Exception('Une date au format Datetime ou string doit être fournie !');
-        }
+        $this->lastBuildDate = $lastBuildDate;
     }
 
 }

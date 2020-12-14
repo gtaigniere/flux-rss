@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Manager;
+namespace App\Manager;
 
 
+use App\Model\Article;
 use Exception;
-use Model\Article;
 use PDO;
 
 /**
@@ -27,6 +27,8 @@ class ArticleManager
     {
         $this->db = $db;
     }
+
+    // ToDo : Pouvoir trier par critères (date, ordre alphabétique, catégorie)
 
     /**
      * Renvoie tous les articles
@@ -50,8 +52,7 @@ class ArticleManager
         if (!$stmt->execute([':id' => $id])) {
             throw new Exception('Une erreur est survenue lors de l\'accès à l\'article d\'id : ' . $id);
         }
-        $stmt->setFetchMode(PDO::FETCH_CLASS, Article::class);
-        $result = $stmt->fetch();
+        $result = $stmt->fetchObject(Article::class);
         if (!$result) {
             throw new Exception('Aucun article n\'a été trouvé avec l\'id : ' . $id);
         }
@@ -67,7 +68,9 @@ class ArticleManager
      */
     public function insert(Article $article): Article
     {
-        $stmt = $this->db->prepare( 'INSERT INTO article VALUES (:id, :title, :description, :link, :category, :releaseDate, :pictureLink, :rssId)');
+        $stmt = $this->db->prepare( '
+            INSERT INTO article VALUES (:id, :title, :description, :link,
+                :category, :releaseDate, :pictureLink, :fluxId)');
         $result = $stmt->execute([
             ':id' => $article->getId(),
             ':title' => $article->getTitle(),
@@ -76,7 +79,7 @@ class ArticleManager
             ':category' => $article->getCategory(),
             ':releaseDate' => $article->getReleaseDate(),
             ':pictureLink' => $article->getPictureLink(),
-            ':rssId' => $article->getRssId()
+            ':fluxId' => $article->getFluxId()
         ]);
         if ($result) {
             return $this->one((int)$this->db->lastInsertId());
@@ -94,7 +97,9 @@ class ArticleManager
     public function update(Article $article): Article
     {
         if ($this->one($article->getId())) {
-            $stmt = $this->db->prepare('UPDATE rss SET id = :id, website = :website, description = :description, url = :url, lastBuildDate = :lastBuildDate WHERE id = :id');
+            $stmt = $this->db->prepare('
+                UPDATE article SET id = :id, title = :title, description = :description, link = :link,
+                    category = :category, releaseDate = :releaseDate, pictureLink = :pictureLink, fluxId = :fluxId WHERE id = :id');
             $result = $stmt->execute([
                 ':id' => $article->getId(),
                 ':title' => $article->getTitle(),
@@ -103,7 +108,7 @@ class ArticleManager
                 ':category' => $article->getCategory(),
                 ':releaseDate' => $article->getReleaseDate(),
                 ':pictureLink' => $article->getPictureLink(),
-                ':rssId' => $article->getRssId()
+                ':fluxId' => $article->getFluxId()
             ]);
             if ($result) {
                 return $this->one($article->getId());
@@ -136,9 +141,9 @@ class ArticleManager
      * @return Article[]
      * @throws Exception Si l'accès aux articles a échoué
      */
-    public function articlesByFlux(int $id): array
+    public function allByFlux(int $id): array
     {
-        $stmt = $this->db->prepare('SELECT * FROM article WHERE rssId = :id');
+        $stmt = $this->db->prepare('SELECT * FROM article WHERE fluxId = :id');
         if (!$stmt->execute([':id' => $id])) {
             throw new Exception('Une erreur est survenue lors de l\'accès à l\'article d\'id : ' . $id);
         }
