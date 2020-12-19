@@ -4,6 +4,7 @@
 namespace App\Manager;
 
 
+use App\App;
 use App\Model\Flux;
 use Exception;
 use PDO;
@@ -12,20 +13,14 @@ use PDO;
  * Class FluxManager
  * @package Manager
  */
-class FluxManager
+class FluxManager extends DbManager
 {
     /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
      * FluxManager constructor.
-     * @param PDO $db
      */
-    public function __construct(PDO $db)
+    public function __construct()
     {
-        $this->db = $db;
+        parent::__construct(App::getInstance()->getDb());
     }
 
     /**
@@ -67,7 +62,8 @@ class FluxManager
     public function insert(Flux $rss): Flux
     {
         $stmt = $this->db->prepare( '
-            INSERT INTO flux VALUES (:id, :website, :description, :url, :lastBuildDate)');
+            INSERT INTO flux VALUES (
+                :id, :website, :description, :url, :lastBuildDate)');
         $result = $stmt->execute([
             ':id' => $rss->getId(),
             ':website' => $rss->getWebsite(),

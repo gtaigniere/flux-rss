@@ -1,6 +1,8 @@
 <?php
 
-require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+require_once '../vendor/autoload.php';
+require_once '../src/app/config/config.php';
+
 
 use App\Controller\FluxController;
 

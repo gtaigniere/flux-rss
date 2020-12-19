@@ -24,7 +24,7 @@ class Article
     private $title;
 
     /**
-     * @var string&
+     * @var string
      */
     private $description;
 

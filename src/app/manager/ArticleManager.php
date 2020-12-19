@@ -4,6 +4,7 @@
 namespace App\Manager;
 
 
+use App\App;
 use App\Model\Article;
 use Exception;
 use PDO;
@@ -12,20 +13,14 @@ use PDO;
  * Class ArticleManager
  * @package Manager
  */
-class ArticleManager
+class ArticleManager extends DbManager
 {
     /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
      * ArticleManager constructor.
-     * @param PDO $db
      */
-    public function __construct(PDO $db)
+    public function __construct()
     {
-        $this->db = $db;
+        parent::__construct(App::getInstance()->getDb());
     }
 
     // ToDo : Pouvoir trier par critères (date, ordre alphabétique, catégorie)

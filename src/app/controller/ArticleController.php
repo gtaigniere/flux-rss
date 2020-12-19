@@ -5,7 +5,6 @@ namespace App\Controller;
 
 
 use App\{
-    App,
     Manager\ArticleManager
 };
 use Exception;
@@ -27,7 +26,7 @@ class ArticleController extends RssController
     public function __construct()
     {
         parent::__construct();
-        $this->articleManager = new ArticleManager(App::getInstance()->getDb());
+        $this->articleManager = new ArticleManager();
     }
 
     /**

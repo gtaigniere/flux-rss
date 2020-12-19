@@ -4,7 +4,10 @@
 namespace App\Controller;
 
 
-use App\{App, Manager\ArticleManager, Manager\FluxManager};
+use App\{
+    Manager\ArticleManager,
+    Manager\FluxManager
+};
 use Exception;
 
 /**
@@ -29,11 +32,19 @@ class FluxController extends RssController
     public function __construct()
     {
         parent::__construct();
-        $this->fluxManager = new FluxManager(App::getInstance()->getDb());
-        $this->articleManager = new ArticleManager(App::getInstance()->getDb());
+        $this->fluxManager = new FluxManager();
+        $this->articleManager = new ArticleManager();
     }
 
     // ToDo : Actualiser les différents flux
+
+    /**
+     * Affiche la page d'accueil
+     */
+    public function index()
+    {
+        $this->render(ROOT_DIR . 'view/index.php', compact([]));
+    }
 
     /**
      * Affiche tous les flux

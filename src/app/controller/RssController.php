@@ -25,14 +25,6 @@ class RssController
     }
 
     /**
-     * Affiche la page d'accueil
-     */
-    public function index()
-    {
-        $this->render(ROOT_DIR . 'view/index.php', compact([]));
-    }
-
-    /**
      * Envoie les paramètres aux vues
      * @param string $view Chemin de la vue
      * @param array $params Paramètres passés à la vue sous la forme "clef => valeur"

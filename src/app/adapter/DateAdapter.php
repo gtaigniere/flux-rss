@@ -8,6 +8,8 @@ use DateTime;
 
 class DateAdapter
 {
+    // ToDo : Constante à créer pour le format des dates
+
     /**
      * Renvoie
      * @param DateTime $date
