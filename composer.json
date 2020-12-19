@@ -1,12 +1,12 @@
 {
-    "name": "gilles/flux-rss",
-    "require": {
-        "ext-pdo": "*",
-      "ext-simplexml": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "": ""
-        }
+  "name": "gilles/flux-rss",
+  "require": {
+    "ext-pdo": "*",
+    "ext-simplexml": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/app/"
     }
+  }
 }
