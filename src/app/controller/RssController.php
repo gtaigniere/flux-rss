@@ -1,10 +1,8 @@
 <?php
 
 
-namespace Controller;
+namespace App\Controller;
 
-
-use PDO;
 
 /**
  * Classe mère de tous les contrôleurs
@@ -13,35 +11,20 @@ use PDO;
 class RssController
 {
     /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
      * @var string
      */
     private $template;
 
     /**
      * Controller constructor.
-     * @param PDO $db
      * @param string $template
      */
-    public function __construct($db, $template = ROOT_DIR . 'view/template.php')
+    public function __construct($template = ROOT_DIR . 'view/template.php')
     {
-        $this->db = $db;
         $this->template = $template;
     }
 
-    /**
-     * Affiche la page d'accueil
-     */
-    public function index()
-    {
-        $this->render(ROOT_DIR . 'view/index.php', compact([]));
-    }
-
-    /**
+        /**
      * Envoie les paramètres aux vues
      * @param string $view Chemin de la vue
      * @param array $params Paramètres passés à la vue sous la forme "clef => valeur"
