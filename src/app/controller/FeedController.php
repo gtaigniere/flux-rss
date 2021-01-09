@@ -57,9 +57,19 @@ class FeedController extends RssController
     public function feedWithArticles($url)
     {
         $feed = null;
+        $articles = [];
         try {
-            $feed = Feed::fromUrl($url);
-            $articles = $feed->getArticles();
+            $headers = @get_headers($url);
+            if($headers && strpos( $headers[0], '200')) {
+                if (count(preg_grep ('/^Content-Type: (\w+)\/xml(\w*)/i', $headers)) > 0) {
+                    $feed = Feed::fromUrl($url);
+                    $articles = $feed->getArticles();
+                } else {
+                    ErrorManager::add("L'Url ne correspond pas à un flux RSS");
+                }
+            } else {
+                ErrorManager::add("L'Url n'existe pas");
+            }
         } catch (Exception $e) {
             ErrorManager::add($e->getMessage());
         } finally {

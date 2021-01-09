@@ -30,7 +30,7 @@ use App\Util\ErrorManager;
 
         <form method="POST">
             <label for="feed" >Flux à afficher : </label>
-            <input type="text" id="feed" name="url" placeholder="Adresse web" required>
+            <input type="text" id="feed" name="url" <?= array_key_exists('url', $_POST) ? 'value="' . $_POST['url'] . '"' : ''; ?> placeholder="Adresse du flux" required>
             <button class="btn btn-success" type="submit" formaction="?target=feed&action=url">Afficher</button>
             <button class="btn btn-primary" type="submit" formaction="?target=feed&action=add">Enregistrer</button>
         </form>
@@ -49,11 +49,6 @@ use App\Util\ErrorManager;
             </p>
             <?php endforeach; ?>
         </div>
-            <form action="?target=feed&action=add" method="POST">
-                <label for="url" >Flux à ajouter : </label>
-                <input type="text" id="url" name="url" <?= !empty($feed->getFeedUrl()) ? 'value="' . $feed->getFeedUrl() . '"' : ''; ?> placeholder="Adresse du flux" required>
-                <button class="btn btn-primary" type="submit" formaction="?target=feed&action=add">Valider</button>
-            </form>
         <?php endif; ?>
 
         <?php if (!isset($articles) && isset($feeds) && !empty($feeds)) : ?>
