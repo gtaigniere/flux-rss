@@ -192,34 +192,17 @@ class Article
      * @param $feedId
      * @return Article
      */
-    public function createArticleFromFeed($item, $feedId = null): Article
-    {
-        $this->id = isset($item->id) ? $item->id : null;
-        $this->title = $item->title;
-        $this->description = $item->description;
-        $this->link = $item->link;
-        $this->category = $item->category;
-        $this->releaseDate = $item->pubDate;
-        $this->pictureLink = isset($item->enclosure['url']) ? $item->enclosure['url'] : null;
-        $this->feedId = $feedId;
-        return $this;
-    }
-
-    /**
-     * @param $item
-     * @return Article
-     */
-    public static function articleFromFeedUrl($item): Article
+    public static function createArticleFromFeed($item, $feedId = null): Article
     {
         $article = new Article();
-        $article->id = isset($rss->id) ? $rss->id : null;
+        $article->id = isset($item->id) ? $item->id : null;
         $article->title = $item->title;
         $article->description = $item->description;
         $article->link = $item->link;
         $article->category = $item->category;
         $article->releaseDate = $item->pubDate;
         $article->pictureLink = isset($item->enclosure['url']) ? $item->enclosure['url'] : null;
-        $article->feedId = isset($item->enclosure['url']) ? $item->enclosure['url'] : null;
+        $article->feedId = $feedId;
         return $article;
     }
 

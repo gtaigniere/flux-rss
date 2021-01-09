@@ -63,8 +63,8 @@ class RssController
     public static function nav_menu(string $linkClass = ''): string
     {
         return
-            self::nav_item(ROOT_DIR . 'index.php', 'Accueil', $linkClass) .
-            self::nav_item(ROOT_DIR . 'index.php?target=article', 'Articles', $linkClass);
+            self::nav_item('index.php', 'Accueil', $linkClass) .
+            self::nav_item('index.php?target=article&action=all', 'Articles', $linkClass);
     }
 
 }

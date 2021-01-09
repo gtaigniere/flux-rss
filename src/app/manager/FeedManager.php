@@ -4,11 +4,7 @@
 namespace App\Manager;
 
 
-use App\{
-    App,
-    Model\Article,
-    Model\Feed
-};
+use App\{App, Model\Article, Model\Feed, Util\ErrorManager};
 use Exception;
 use PDO;
 
@@ -37,12 +33,25 @@ class FeedManager extends DbManager
     }
 
     /**
-     * Renvoie le flux dont l'id est passé en paramètre (sans les articles)
+     * Renvoie le flux dont l'id est passé en paramètre (avec les articles)
      * @param int $id
      * @return Feed|null
      * @throws Exception Si l'accès au flux a échoué
      */
     public function one(int $id): ?Feed
+    {
+        $feed = $this->feedWithoutArticles($id);
+        $feed->setArticles($this->articlesFromFeed($id));
+        return $feed;
+    }
+
+    /**
+     * Renvoie le flux dont l'id est passé en paramètre (sans les articles)
+     * @param int $id
+     * @return Feed|null
+     * @throws Exception Si l'accès au flux a échoué
+     */
+    public function feedWithoutArticles(int $id): ?Feed
     {
         $stmt = $this->db->prepare('SELECT * FROM feed WHERE id = :id');
         if (!$stmt->execute([':id' => $id])) {
@@ -65,13 +74,13 @@ class FeedManager extends DbManager
     {
         $stmt = $this->db->prepare('SELECT * FROM article WHERE feedId = :id');
         if (!$stmt->execute([':id' => $id])) {
-            throw new Exception('Une erreur est survenue lors de l\'accès à l\'article d\'id : ' . $id);
+            throw new Exception('Une erreur est survenue lors de l\'accès aux articles du flux d\'id : ' . $id);
         }
         return $stmt->fetchAll(PDO::FETCH_CLASS, Article::class);
     }
 
     /**
-     * Ajoute le flux passé en paramètre
+     * Ajoute le flux passé en paramètre (sans les articles)
      * Renvoie celui-ci s'il a bien été ajouté
      * @param Feed $feed
      * @return Feed
@@ -84,10 +93,10 @@ class FeedManager extends DbManager
                 :id, :website, :description, :url, :lastBuildDate, :pictureUrl)');
         $result = $stmt->execute([
             ':id' => $feed->getId(),
-            ':website' => $feed->getWebsite(),
+            ':website' => $feed->getTitle(),
             ':description' => $feed->getDescription(),
-            ':url' => $feed->getUrl(),
-            ':lastBuildDate' => $feed->getLastBuildDate(),
+            ':url' => $feed->getSiteUrl(),
+            ':lastBuildDate' => $feed->getLastBuildDate()->format('Y-m-d H:i:s'),
             ':pictureUrl' => $feed->getPictureUrl()
         ]);
         if ($result) {
@@ -97,7 +106,7 @@ class FeedManager extends DbManager
     }
 
     /**
-     * Modify le flux passé en paramètre
+     * Modify le flux passé en paramètre (sans les articles)
      * Renvoie celui-ci s'il a bien été modifié
      * @param Feed $feed
      * @return Feed
@@ -111,10 +120,10 @@ class FeedManager extends DbManager
                     url = :url, lastBuildDate = :lastBuildDate, pictureUrl = :pictureUrl WHERE id = :id');
             $result = $stmt->execute([
                 ':id' => $feed->getId(),
-                ':website' => $feed->getWebsite(),
+                ':website' => $feed->getTitle(),
                 ':description' => $feed->getDescription(),
-                ':url' => $feed->getUrl(),
-                ':lastBuildDate' => $feed->getLastBuildDate(),
+                ':url' => $feed->getSiteUrl(),
+                ':lastBuildDate' => $feed->getLastBuildDate()->format('Y-m-d H:i:s'),
                 ':pictureUrl' => $feed->getPictureUrl()
             ]);
             if ($result) {
@@ -126,7 +135,7 @@ class FeedManager extends DbManager
     }
 
     /**
-     * Supprime le flux dont l'id est passé en paramètre
+     * Supprime le flux dont l'id est passé en paramètre (sans les articles)
      * @param int $id
      * @throws Exception Si la suppression a échoué ou si le flux n'existe pas en base de données
      */

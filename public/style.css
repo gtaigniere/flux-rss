@@ -77,6 +77,9 @@ section .alert {
     display: flex;
     justify-content: space-around;
 }
+.fluxs h2 {
+    text-align: center;
+}
 .img-flux {
     margin: 10px;
     width: 300px;

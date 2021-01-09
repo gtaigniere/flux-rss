@@ -19,9 +19,15 @@ class Feed
     private $id;
 
     /**
+     * Url du flux RSS
      * @var string
      */
-    private $website;
+    private $feedUrl;
+
+    /**
+     * @var string
+     */
+    private $title;
 
     /**
      * @var string
@@ -29,9 +35,10 @@ class Feed
     private $description;
 
     /**
+     * Url du site
      * @var string
      */
-    private $url;
+    private $siteUrl;
 
     /**
      * @var DateTime
@@ -42,6 +49,11 @@ class Feed
      * @var string|null
      */
     private $pictureUrl;
+
+    /**
+     * @var Article[]
+     */
+    private $articles = [];
 
     /**
      * Feed constructor.
@@ -69,17 +81,33 @@ class Feed
     /**
      * @return string
      */
-    public function getWebsite(): string
+    public function getFeedUrl(): string
     {
-        return $this->website;
+        return $this->feedUrl;
     }
 
     /**
-     * @param string $website
+     * @param string $feedUrl
      */
-    public function setWebsite(string $website): void
+    public function setFeedUrl(string $feedUrl): void
     {
-        $this->website = $website;
+        $this->feedUrl = $feedUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title != null ?$this->title : '';
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
     }
 
     /**
@@ -101,17 +129,17 @@ class Feed
     /**
      * @return string
      */
-    public function getUrl(): string
+    public function getSiteUrl(): string
     {
-        return $this->url;
+        return $this->siteUrl;
     }
 
     /**
-     * @param string $url
+     * @param string $siteUrl
      */
-    public function setUrl(string $url): void
+    public function setSiteUrl(string $siteUrl): void
     {
-        $this->url = $url;
+        $this->siteUrl = $siteUrl;
     }
 
     /**
@@ -149,34 +177,59 @@ class Feed
     }
 
     /**
-     * @param $rss
-     * @return Feed
+     * @return Article[]
      */
-    public function createFeed($rss): Feed
+    public function getArticles(): array
     {
-        $this->id = isset($rss->id) ? $rss->id : null;
-        $this->website = $rss->title;
-        $this->description = $rss->description;
-        $this->url = $rss->link;
-        $this->lastBuildDate = $rss->lastBuildDate;
-        $this->pictureUrl = isset($rss->pictureUrl) ? $rss->pictureUrl : null;
-        return $this;
+        return $this->articles;
+    }
+
+    /**
+     * @param Article[] $articles
+     */
+    public function setArticles(array $articles): void
+    {
+        $this->articles = $articles;
     }
 
     /**
      * @param $rss
+     * @param $url
      * @return Feed
      */
-    public static function feedFromUrl($rss): Feed
+    public static function createFeed($rss, $url): Feed
     {
         $feed = new Feed();
         $feed->id = isset($rss->id) ? $rss->id : null;
-        $feed->website = $rss->title;
+        $feed->feedUrl = $url;
+        $feed->title = $rss->title != null ? $rss->title : '';
         $feed->description = $rss->description;
-        $feed->url = $rss->link;
+        $feed->siteUrl = $rss->link;
         $feed->lastBuildDate = $rss->lastBuildDate;
-        $feed->pictureUrl = isset($rss->pictureUrl) ? $rss->pictureUrl : null;;
+        $feed->pictureUrl = isset($rss->image->url) ? $rss->image->url : null;
         return $feed;
+    }
+
+    /**
+     * @param $url
+     * @return Feed
+     * @throws Exception
+     */
+    public static function fromUrl($url): Feed
+    {
+        $xml = file_get_contents($url);
+        $rss = simplexml_load_string($xml);
+        if ($rss && property_exists($rss, 'channel')) {
+            $rss = $rss->channel;
+            $feed = self::createFeed($rss, $url);
+            $articles = [];
+            foreach ($rss->item as $item) {
+                $articles[] = Article::createArticleFromFeed($item);
+            }
+            $feed->setArticles($articles);
+            return $feed;
+        }
+        throw new Exception("Le flux demandé n'a pas été trouvé");
     }
 
 }

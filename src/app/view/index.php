@@ -1,11 +1,16 @@
 <?php
 
+use App\Model\Feed;
 use App\Util\ErrorManager;
 
 /*
  * https://www.clubic.com/feed/news.rss
  * http://www.metal-impact.com/rss.xml
- *
+ * http://feeds.feedburner.com/spirit-of-metal/fr?format=xml
+ * https://www.lemonde.fr/societe/rss_full.xml
+ * https://www.lemonde.fr/sport/rss_full.xml
+ * https://www.francetvinfo.fr/faits-divers.rss
+ * https://www.francetvinfo.fr/animaux.rss
  */
 //if ($article === null) : echo '<p>aucun article correspondant</p>';
 ?>
@@ -23,13 +28,14 @@ use App\Util\ErrorManager;
         ErrorManager::destroy();
         ?>
 
-        <form action="?target=feed&action=url" method="POST">
+        <form method="POST">
             <label for="feed" >Flux à afficher : </label>
             <input type="text" id="feed" name="url" placeholder="Adresse web" required>
-            <button class="btn btn-success" type="submit">Envoyer</button>
+            <button class="btn btn-success" type="submit" formaction="?target=feed&action=url">Afficher</button>
+            <button class="btn btn-primary" type="submit" formaction="?target=feed&action=add">Enregistrer</button>
         </form>
 
-        <?php if (isset($feed, $articles)) : ?>
+        <?php if (isset($feed, $articles) && $feed instanceof Feed) : ?>
         <h2><?= $feed->getDescription() ?></h2>
         <div class="articles">
             <?php foreach($articles as $article) : ?>
@@ -37,15 +43,16 @@ use App\Util\ErrorManager;
                 <a href="<?= $article->getLink(); ?>">
                     <img class="img-item" src="<?= $article->getPictureLink(); ?>" alt="">
                 </a>
-                <span class="title"><?= $article->getTitle(); ?></span><br>
+                <a href="<?= $article->getLink(); ?>">
+                    <span class="title"><?= $article->getTitle(); ?></span></a><br>
                 <?= strip_tags($article->getDescription()); ?>
             </p>
             <?php endforeach; ?>
         </div>
             <form action="?target=feed&action=add" method="POST">
                 <label for="url" >Flux à ajouter : </label>
-                <input type="text" id="url" name="url" <?= !empty($feed->getUrl()) ? 'value="' . $feed->getUrl() . '"' : ''; ?> placeholder="Adresse du flux" required>
-                <button class="btn btn-primary" type="submit">Valider</button>
+                <input type="text" id="url" name="url" <?= !empty($feed->getFeedUrl()) ? 'value="' . $feed->getFeedUrl() . '"' : ''; ?> placeholder="Adresse du flux" required>
+                <button class="btn btn-primary" type="submit" formaction="?target=feed&action=add">Valider</button>
             </form>
         <?php endif; ?>
 
@@ -53,13 +60,9 @@ use App\Util\ErrorManager;
         <div class="fluxs">
             <?php foreach($feeds as $feed) : ?>
             <div class="flux">
-                <h2><?= $feed->getWebsite() ?></h2>
+                <h2><?= $feed->getTitle() ?></h2>
 
-                <form action="" method="POST">
-                    <label for="url" >Flux à ajouter : </label>
-                    <input type="text" id="url" name="url" placeholder="Adresse web" required>
-                    <button class="btn btn-success" type="submit">Envoyer</button>
-                </form>
+                <a href="?target=feed&action=one"><img class="img-flux" src="<?= $feed->getPictureUrl() ?>" alt=""></a>
             </div>
             <?php endforeach; ?>
         </div>
