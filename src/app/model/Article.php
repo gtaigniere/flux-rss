@@ -202,7 +202,7 @@ class Article
         $article->category = isset($item->category) ? $item->category : null;
         $article->releaseDate = $item->pubDate;
         $article->pictureLink = isset($item->enclosure['url']) ? $item->enclosure['url'] : null;
-        $article->feedId = $feedId;
+        $article->feedId = isset($item->feedId) ? $item->feedId : null;
         return $article;
     }
 
