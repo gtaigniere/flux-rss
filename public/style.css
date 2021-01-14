@@ -19,6 +19,7 @@ main {
 section {
     display: flex;
     flex-direction: column;
+    padding-bottom: 20px;
     width: 100%;
 }
 h1 {
@@ -37,16 +38,16 @@ section .alert {
 }
 .sect-home label {
     margin: auto;
-    padding: 0 10px;
+    padding-left: 10px;
+    width: 175px;
 }
 .sect-home form input {
     border: 1px solid lightgrey;
     border-radius: .25rem;
-    width: calc(100% - 220px);
+    width: 100%;
 }
 .sect-home form button {
     margin-left: 10px;
-    width: 85px;
 }
 .sect-home h2 {
     margin: 0 20px;
@@ -68,16 +69,4 @@ section .alert {
 .title {
     text-decoration: underline ;
     color: #ff0000;
-}
-
-.btn-add-flux {
-    margin: 20px auto;
-}
-.fluxs {
-    display: flex;
-    justify-content: space-around;
-}
-.img-flux {
-    margin: 10px;
-    width: 300px;
 }

@@ -50,7 +50,7 @@ class Router
                     $ctrl->all();
                     break;
                 case 'one':
-                    $ctrl->one($this->postParams['id']);
+                    $ctrl->one($this->getParams['id']);
                     break;
                 case 'add':
                     $ctrl->add($this->postParams['url']);
