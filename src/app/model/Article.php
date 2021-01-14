@@ -34,7 +34,7 @@ class Article
     private $link;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $category;
 
@@ -58,17 +58,17 @@ class Article
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      */
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
@@ -122,17 +122,17 @@ class Article
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCategory(): string
+    public function getCategory(): ?string
     {
         return $this->category;
     }
 
     /**
-     * @param string $category
+     * @param string|null $category
      */
-    public function setCategory(string $category): void
+    public function setCategory(?string $category): void
     {
         $this->category = $category;
     }
@@ -199,7 +199,7 @@ class Article
         $article->title = $item->title;
         $article->description = $item->description;
         $article->link = $item->link;
-        $article->category = $item->category;
+        $article->category = isset($item->category) ? $item->category : null;
         $article->releaseDate = $item->pubDate;
         $article->pictureLink = isset($item->enclosure['url']) ? $item->enclosure['url'] : null;
         $article->feedId = $feedId;

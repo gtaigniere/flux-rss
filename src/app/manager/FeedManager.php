@@ -4,7 +4,11 @@
 namespace App\Manager;
 
 
-use App\{App, Model\Article, Model\Feed, Util\ErrorManager};
+use App\{
+    App,
+    Model\Article,
+    Model\Feed
+};
 use Exception;
 use PDO;
 
@@ -90,14 +94,14 @@ class FeedManager extends DbManager
     {
         $stmt = $this->db->prepare( '
             INSERT INTO feed VALUES (
-                :id, :website, :description, :url, :lastBuildDate, :pictureUrl)');
+                :id, :feedUrl, :title, :description, :siteUrl, :lastBuildDate)');
         $result = $stmt->execute([
             ':id' => $feed->getId(),
-            ':website' => $feed->getTitle(),
+            ':feedUrl' => $feed->getFeedUrl(),
+            ':title' => $feed->getTitle(),
             ':description' => $feed->getDescription(),
-            ':url' => $feed->getSiteUrl(),
-            ':lastBuildDate' => $feed->getLastBuildDate()->format('Y-m-d H:i:s'),
-            ':pictureUrl' => $feed->getPictureUrl()
+            ':siteUrl' => $feed->getSiteUrl(),
+            ':lastBuildDate' => $feed->getLastBuildDate()->format('Y-m-d H:i:s')
         ]);
         if ($result) {
             return $this->one((int)$this->db->lastInsertId());
@@ -116,15 +120,15 @@ class FeedManager extends DbManager
     {
         if ($this->one($feed->getId())) {
             $stmt = $this->db->prepare('
-                UPDATE feed SET id = :id, website = :website, description = :description,
-                    url = :url, lastBuildDate = :lastBuildDate, pictureUrl = :pictureUrl WHERE id = :id');
+                UPDATE feed SET id = :id, feedUrl = :feedUrl, title = :title, description = :description,
+                    siteUrl = :siteUrl, lastBuildDate = :lastBuildDate WHERE id = :id');
             $result = $stmt->execute([
                 ':id' => $feed->getId(),
-                ':website' => $feed->getTitle(),
+                ':feedUrl' => $feed->getFeedUrl(),
+                ':title' => $feed->getTitle(),
                 ':description' => $feed->getDescription(),
-                ':url' => $feed->getSiteUrl(),
-                ':lastBuildDate' => $feed->getLastBuildDate()->format('Y-m-d H:i:s'),
-                ':pictureUrl' => $feed->getPictureUrl()
+                ':siteUrl' => $feed->getSiteUrl(),
+                ':lastBuildDate' => $feed->getLastBuildDate()->format('Y-m-d H:i:s')
             ]);
             if ($result) {
                 return $this->one($feed->getId());

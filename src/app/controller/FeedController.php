@@ -115,21 +115,26 @@ class FeedController extends RssController
         try {
             $feed = $this->feedManager->one($id);
             $articles = $feed->getArticles();
-            $this->render(ROOT_DIR . 'view/feed.php', compact('feed', 'articles'));
+            $this->render(ROOT_DIR . 'view/index.php', compact('feed', 'articles'));
         } catch (Exception $e) {
             ErrorManager::add($e->getMessage());
         }
     }
 
     /**
-     * Crée et ajoute un flux (sans ses articles) avec l'url reçue
+     * Crée et ajoute un flux avec l'url reçue
      * @param string $url Adresse web du flux
      */
     public function add(string $url): void
     {
         try {
             $feed = Feed::fromUrl($url);
-            $this->feedManager->insert($feed);
+            $lastInsertFeed = $this->feedManager->insert($feed);
+            $articles = (array) $feed->getArticles();
+            foreach ($articles as $article) {
+                $article->setFeedId($lastInsertFeed->getId());
+                $this->articleManager->insert($article);
+            }
             $this->all();
         } catch (Exception $e) {
             ErrorManager::add($e->getMessage());
@@ -137,7 +142,7 @@ class FeedController extends RssController
     }
 
     /**
-     * Modifie un flux (sans ses articles) avec les paramètres reçus (sans ses articles)
+     * Modifie un flux (sans ses articles) avec les paramètres reçus
      * @param array $params Tableau associatif dont les clefs et valeurs
      * correspondent respectivement aux champs "name" et "value" du formulaire
      */
@@ -146,11 +151,11 @@ class FeedController extends RssController
         try {
             $feed = new Feed();
             $feed->setId($params['id']);
-            $feed->setTitle($params['website']);
+            $feed->setFeedUrl($params['feedUrl']);
+            $feed->setTitle($params['title']);
             $feed->setDescription($params['description']);
-            $feed->setSiteUrl($params['url']);
+            $feed->setSiteUrl($params['siteUrl']);
             $feed->setLastBuildDate($params['lastBuildDate']);
-            $feed->setPictureUrl($params['pictureUrl']);
             $this->feedManager->update($feed);
             $this->all();
         } catch (Exception $e) {
@@ -159,7 +164,7 @@ class FeedController extends RssController
     }
 
     /**
-     * Supprime le flux (sans ses articles) dont l'id est passé en paramètre
+     * Supprime le flux dont l'id est passé en paramètre
      * @param int $id
      * @throws Exception
      */

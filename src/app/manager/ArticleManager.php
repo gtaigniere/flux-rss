@@ -74,7 +74,7 @@ class ArticleManager extends DbManager
             ':description' => $article->getDescription(),
             ':link' => $article->getLink(),
             ':category' => $article->getCategory(),
-            ':releaseDate' => $article->getReleaseDate(),
+            ':releaseDate' => $article->getReleaseDate()->format('Y-m-d H:i:s'),
             ':pictureLink' => $article->getPictureLink(),
             ':feedId' => $article->getFeedId()
         ]);
@@ -103,7 +103,7 @@ class ArticleManager extends DbManager
                 ':description' => $article->getDescription(),
                 ':link' => $article->getLink(),
                 ':category' => $article->getCategory(),
-                ':releaseDate' => $article->getReleaseDate(),
+                ':releaseDate' => $article->getReleaseDate()->format('Y-m-d H:i:s'),
                 ':pictureLink' => $article->getPictureLink(),
                 ':feedId' => $article->getFeedId()
             ]);

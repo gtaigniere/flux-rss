@@ -46,11 +46,6 @@ class Feed
     private $lastBuildDate;
 
     /**
-     * @var string|null
-     */
-    private $pictureUrl;
-
-    /**
      * @var Article[]
      */
     private $articles = [];
@@ -161,22 +156,6 @@ class Feed
     }
 
     /**
-     * @return string|null
-     */
-    public function getPictureUrl(): ?string
-    {
-        return $this->pictureUrl;
-    }
-
-    /**
-     * @param string|null $pictureUrl
-     */
-    public function setPictureUrl(?string $pictureUrl): void
-    {
-        $this->pictureUrl = $pictureUrl;
-    }
-
-    /**
      * @return Article[]
      */
     public function getArticles(): array
@@ -206,7 +185,6 @@ class Feed
         $feed->description = $rss->description;
         $feed->siteUrl = $rss->link;
         $feed->lastBuildDate = $rss->lastBuildDate;
-        $feed->pictureUrl = isset($rss->image->url) ? $rss->image->url : null;
         return $feed;
     }
 

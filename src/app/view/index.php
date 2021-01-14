@@ -40,12 +40,12 @@ use App\Util\ErrorManager;
         <div class="articles">
             <?php foreach($articles as $article) : ?>
             <p class="article">
-                <a href="<?= $article->getLink(); ?>">
-                    <img class="img-item" src="<?= $article->getPictureLink(); ?>" alt="">
+                <a href="<?= $article->getLink() ?>">
+                    <img class="img-item" src="<?= $article->getPictureLink() ?>" alt="">
                 </a>
-                <a href="<?= $article->getLink(); ?>">
-                    <span class="title"><?= $article->getTitle(); ?></span></a><br>
-                <?= strip_tags($article->getDescription()); ?>
+                <a href="<?= $article->getLink() ?>">
+                    <span class="title"><?= $article->getTitle() ?></span></a><br>
+                <?= strip_tags($article->getDescription()) ?>
             </p>
             <?php endforeach; ?>
         </div>
@@ -55,13 +55,13 @@ use App\Util\ErrorManager;
         <div class="fluxs">
             <?php foreach($feeds as $feed) : ?>
             <div class="flux">
-                <h2><?= $feed->getTitle() ?></h2>
-
-                <a href="?target=feed&action=one"><img class="img-flux" src="<?= $feed->getPictureUrl() ?>" alt=""></a>
+                <h2><a href="?target=feed&action=one&id=<?= $feed->getId() ?>"><?= $feed->getTitle() ?></a></h2>
             </div>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
+
+
 
     </section>
 
