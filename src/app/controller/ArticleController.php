@@ -33,12 +33,21 @@ class ArticleController extends RssController
 
     /**
      * Affiche tous les articles
-     * @throws Exception
      */
     public function all()
     {
         $articles = $this->articleManager->all();
         $this->render(ROOT_DIR . 'view/articles.php', compact('articles'));
+    }
+
+    /**
+     * Affiche tous les articles orphelins
+     */
+    public function orphans()
+    {
+        $articles = $this->articleManager->orphans();
+        $orphan = true;
+        $this->render(ROOT_DIR . 'view/articles.php', compact('articles', 'orphan'));
     }
 
     /**
@@ -103,15 +112,36 @@ class ArticleController extends RssController
     /**
      * Supprime l'article dont l'id est passé en paramètre
      * @param int $id
-     * @throws Exception
      */
     public function delete(int $id): void
     {
-        try {
-            $this->articleManager->delete($id);
-            $this->all();
-        } catch (Exception $e) {
-            ErrorManager::add($e->getMessage());
+        if (array_key_exists('validate', $_POST) && $_POST['validate']) {
+            try {
+                $this->articleManager->delete($id);
+                $this->all();
+            } catch (Exception $e) {
+                ErrorManager::add($e->getMessage());
+            }
+        } else {
+            $this->validate($_POST);
+        }
+    }
+
+    /**
+     * @param array $params
+     * Supprime tous les articles orphelins
+     */
+    public function deleteOrphans($params): void
+    {
+        if (array_key_exists('validate', $params) && $params['validate']) {
+            try {
+                $this->articleManager->deleteOrphans();
+                $this->all();
+            } catch (Exception $e) {
+                ErrorManager::add($e->getMessage());
+            }
+        } else {
+            $this->validate($params);
         }
     }
 

@@ -8,7 +8,7 @@ use DateTime;
 
 class DateAdapter
 {
-    // ToDo : Constante à créer pour le format des dates
+    const DATETIME_FORMAT_FRANCE = 'd/m/Y H:i';
 
     /**
      * Renvoie
@@ -17,7 +17,7 @@ class DateAdapter
      */
     public static function toString(DateTime $date): string
     {
-        return $date->format('d/m/Y H:i');
+        return $date->format(self::DATETIME_FORMAT_FRANCE);
     }
 
     /**
@@ -26,7 +26,7 @@ class DateAdapter
      */
     public static function toDateTime(string $date): DateTime
     {
-        return Datetime::createFromFormat('d/m/Y H:i', $date);
+        return Datetime::createFromFormat(self::DATETIME_FORMAT_FRANCE, $date);
     }
 
     /**

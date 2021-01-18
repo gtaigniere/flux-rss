@@ -38,6 +38,16 @@ class ArticleManager extends DbManager
     }
 
     /**
+     * Renvoie tous les articles orphelins
+     * @return Article[]
+     */
+    public function orphans(): array
+    {
+        $stmt = $this->db->query('SELECT * FROM article WHERE feedId IS NULL');
+        return $stmt->fetchAll(PDO::FETCH_CLASS, Article::class);
+    }
+
+    /**
      * Renvoie l'article dont l'id est passé en paramètre
      * @param int $id
      * @return Article|null
@@ -129,6 +139,35 @@ class ArticleManager extends DbManager
             }
         } else {
             throw new Exception('Aucun article n\'a été trouvé avec l\'id : ' . $id);
+        }
+    }
+
+    /**
+     * Supprime les articles du flux dont l'id est passé en paramètre
+     * @param int $id
+     * @throws Exception Si la suppression a échoué ou si les articles n'ont pas d'id de flux
+     */
+    public function deleteArticlesFromFeed(int $id)
+    {
+        if ($this->one($id)) {
+            $stmt = $this->db->prepare('DELETE FROM article WHERE feedId = :id');
+            if (!$stmt->execute([':id' => $id])) {
+                throw new Exception('Une erreur est survenue lors de la suppression des articles du flux d\'id : ' . $id);
+            }
+        } else {
+            throw new Exception('Aucun article n\'a été trouvé avec le flux d\'id : ' . $id);
+        }
+    }
+
+    /**
+     * Supprime les articles orphelins
+     * @throws Exception Si la suppression a échoué
+     */
+    public function deleteOrphans()
+    {
+        $stmt = $this->db->prepare('DELETE FROM article WHERE feedId IS NULL');
+        if (!$stmt->execute([])) {
+            throw new Exception('Une erreur est survenue lors de la suppression des articles');
         }
     }
 
