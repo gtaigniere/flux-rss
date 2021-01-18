@@ -1,6 +1,4 @@
 <?php
-
-use App\Model\Feed;
 use App\Util\ErrorManager;
 
 /*
@@ -12,7 +10,6 @@ use App\Util\ErrorManager;
  * https://www.francetvinfo.fr/faits-divers.rss
  * https://www.francetvinfo.fr/animaux.rss
  */
-//if ($article === null) : echo '<p>aucun article correspondant</p>';
 ?>
 
     <section class="sect-home">
@@ -34,34 +31,6 @@ use App\Util\ErrorManager;
             <button class="btn btn-success" type="submit" formaction="?target=feed&action=url">Afficher</button>
             <button class="btn btn-primary" type="submit" formaction="?target=feed&action=add">Enregistrer</button>
         </form>
-
-        <?php if (isset($feed, $articles) && $feed instanceof Feed) : ?>
-        <h2><?= $feed->getDescription() ?></h2>
-        <div class="articles">
-            <?php foreach($articles as $article) : ?>
-            <p class="article">
-                <a href="<?= $article->getLink() ?>">
-                    <img class="img-item" src="<?= $article->getPictureLink() ?>" alt="">
-                </a>
-                <a href="<?= $article->getLink() ?>">
-                    <span class="title"><?= $article->getTitle() ?></span></a><br>
-                <?= strip_tags($article->getDescription()) ?>
-            </p>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
-
-        <?php if (!isset($articles) && isset($feeds) && !empty($feeds)) : ?>
-        <div class="fluxs">
-            <?php foreach($feeds as $feed) : ?>
-            <div class="flux">
-                <h2><a href="?target=feed&action=one&id=<?= $feed->getId() ?>"><?= $feed->getTitle() ?></a></h2>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
-
-
 
     </section>
 

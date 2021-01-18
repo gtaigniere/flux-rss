@@ -52,7 +52,6 @@ class FeedController extends RssController
      * Recherche sur le web le flux dont l'url est passé en paramètre
      * puis l'affiche (avec les articles)
      * @param $url
-     * @throws Exception
      */
     public function feedWithArticles($url)
     {
@@ -73,7 +72,7 @@ class FeedController extends RssController
         } catch (Exception $e) {
             ErrorManager::add($e->getMessage());
         } finally {
-            $this->render(ROOT_DIR . 'view/index.php', compact('feed', 'articles'));
+            $this->render(ROOT_DIR . 'view/feed.php', compact('feed', 'articles'));
         }
     }
 
@@ -95,14 +94,13 @@ class FeedController extends RssController
         }
     }
 
-        /**
+    /**
      * Affiche tous les flux
-     * @throws Exception
      */
     public function all()
     {
         $feeds = $this->feedManager->all();
-        $this->render(ROOT_DIR . 'view/index.php', compact('feeds'));
+        $this->render(ROOT_DIR . 'view/feeds.php', compact('feeds'));
     }
 
     /**
@@ -115,7 +113,7 @@ class FeedController extends RssController
         try {
             $feed = $this->feedManager->one($id);
             $articles = $feed->getArticles();
-            $this->render(ROOT_DIR . 'view/index.php', compact('feed', 'articles'));
+            $this->render(ROOT_DIR . 'view/feed.php', compact('feed', 'articles'));
         } catch (Exception $e) {
             ErrorManager::add($e->getMessage());
         }
@@ -148,33 +146,43 @@ class FeedController extends RssController
      */
     public function modify(array $params): void
     {
-        try {
-            $feed = new Feed();
-            $feed->setId($params['id']);
-            $feed->setFeedUrl($params['feedUrl']);
-            $feed->setTitle($params['title']);
-            $feed->setDescription($params['description']);
-            $feed->setSiteUrl($params['siteUrl']);
-            $feed->setLastBuildDate($params['lastBuildDate']);
-            $this->feedManager->update($feed);
-            $this->all();
-        } catch (Exception $e) {
-            ErrorManager::add($e->getMessage());
+        if (array_key_exists('validate', $_POST) && $_POST['validate']) {
+            try {
+                $feed = new Feed();
+                $feed->setId($params['id']);
+                $feed->setFeedUrl($params['feedUrl']);
+                $feed->setTitle($params['title']);
+                $feed->setDescription($params['description']);
+                $feed->setSiteUrl($params['siteUrl']);
+                $feed->setLastBuildDate($params['lastBuildDate']);
+                $this->feedManager->update($feed);
+                $this->all();
+            } catch (Exception $e) {
+                ErrorManager::add($e->getMessage());
+            }
+        } else {
+            $this->validate($params);
         }
     }
 
     /**
      * Supprime le flux dont l'id est passé en paramètre
      * @param int $id
-     * @throws Exception
      */
     public function delete(int $id): void
     {
-        try {
-            $this->feedManager->delete($id);
-            $this->all();
-        } catch (Exception $e) {
-            ErrorManager::add($e->getMessage());
+        if (array_key_exists('with', $_POST)) {
+            try {
+                if ($_POST['with']) {
+                    $this->articleManager->deleteArticlesFromFeed($id);
+                }
+                $this->feedManager->delete($id);
+                $this->all();
+            } catch (Exception $e) {
+                ErrorManager::add($e->getMessage());
+            }
+        } else {
+            $this->render(ROOT_DIR . 'view/delChoice.php', compact('id'));
         }
     }
 

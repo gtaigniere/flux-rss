@@ -59,7 +59,7 @@ class Router
                     echo 'coucou4';
                     break;
                 case 'del':
-                    echo 'coucou5';
+                    $ctrl->delete($this->getParams['id']);
                     break;
                 default:
                     echo 'Pas de paramètre "action" depuis "feed"';
@@ -68,7 +68,10 @@ class Router
             $ctrl = new ArticleController();
             switch ($action) {
                 case 'all':
-                    echo 'salut';
+                    $ctrl->all();
+                    break;
+                case 'orphan':
+                    $ctrl->orphans();
                     break;
                 case 'one':
                     echo 'salut2';
@@ -80,7 +83,11 @@ class Router
                     echo 'salut4';
                     break;
                 case 'del':
-                    echo 'salut5';
+                    if (isset($this->getParams['id'])) {
+                        $ctrl->delete($this->getParams['id']);
+                    } elseif (isset($this->postParams['orphans']) && $this->postParams['orphans'] == true) {
+                        $ctrl->deleteOrphans($this->postParams);
+                    }
                     break;
                 default:
                     echo 'Pas de paramètre "action" depuis "article"';

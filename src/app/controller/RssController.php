@@ -24,7 +24,7 @@ class RssController
         $this->template = $template;
     }
 
-        /**
+    /**
      * Envoie les paramètres aux vues
      * @param string $view Chemin de la vue
      * @param array $params Paramètres passés à la vue sous la forme "clef => valeur"
@@ -37,6 +37,15 @@ class RssController
         require_once $view;
         $section = ob_get_clean();
         require_once $this->template;
+    }
+
+    /**
+     * Affiche la page de demande de confirmation pour l'ajout, la modification, et la suppression
+     * @param array $datas
+     */
+    public function validate(array $datas)
+    {
+        $this->render(ROOT_DIR . 'view/validation.php', compact('datas'));
     }
 
     /**
@@ -64,7 +73,9 @@ class RssController
     {
         return
             self::nav_item('index.php', 'Accueil', $linkClass) .
-            self::nav_item('index.php?target=article&action=all', 'Articles', $linkClass);
+            self::nav_item('index.php?target=feed&action=all', 'Fluxs', $linkClass) .
+            self::nav_item('index.php?target=article&action=all', 'Articles', $linkClass) .
+            self::nav_item('index.php?target=article&action=orphan', 'Orphelins', $linkClass);
     }
 
 }
