@@ -18,11 +18,17 @@ use PDO;
 class ArticleManager extends DbManager
 {
     /**
+     * @var FeedManager
+     */
+    private $feedManager;
+
+    /**
      * ArticleManager constructor.
      */
     public function __construct()
     {
         parent::__construct(App::getInstance()->getDb());
+        $this->feedManager = new FeedManager();
     }
 
     // ToDo : Pouvoir trier par critères (date, ordre alphabétique, catégorie)
@@ -145,11 +151,11 @@ class ArticleManager extends DbManager
     /**
      * Supprime les articles du flux dont l'id est passé en paramètre
      * @param int $id
-     * @throws Exception Si la suppression a échoué ou si les articles n'ont pas d'id de flux
+     * @throws Exception Si la suppression a échoué ou si l'id de flux n'existe pas
      */
-    public function deleteArticlesFromFeed(int $id)
+    public function deleteAllByFeedId(int $id)
     {
-        if ($this->one($id)) {
+        if ($this->feedManager->one($id)) {
             $stmt = $this->db->prepare('DELETE FROM article WHERE feedId = :id');
             if (!$stmt->execute([':id' => $id])) {
                 throw new Exception('Une erreur est survenue lors de la suppression des articles du flux d\'id : ' . $id);

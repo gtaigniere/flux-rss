@@ -23,7 +23,7 @@ use App\Util\ErrorManager;
     </form>
 
     <?php if (isset($feed, $articles)) : ?>
-    <h2><?= $feed->getDescription() ?></h2>
+    <h2><?= $feed->getDescription() ?> (<?= $feed->getLastBuildDate()->format('d/m/Y-H:i'); ?>)</h2>
     <div class="articles">
         <?php foreach($articles as $article) : ?>
             <p class="article">

@@ -171,10 +171,10 @@ class FeedController extends RssController
      */
     public function delete(int $id): void
     {
-        if (array_key_exists('with', $_POST)) {
+        if (array_key_exists('article', $_POST)) {
             try {
-                if ($_POST['with']) {
-                    $this->articleManager->deleteArticlesFromFeed($id);
+                if ($_POST['article'] == true) {
+                    $this->articleManager->deleteAllByFeedId($id);
                 }
                 $this->feedManager->delete($id);
                 $this->all();

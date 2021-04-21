@@ -21,8 +21,8 @@ if (isset($id)) {
         <p class="take-care">Attention, la suppression d'un flux seul, laissera ses articles orphelins !</p>
         <p>Ils pourront être afficher dans la section "Orphelins" depuis la barre de navigation.</p>
         <form action="?target=feed&action=del&id=<?= $id ?>" method="POST">
-            <button class="btn btn-secondary" name="with" value="true">Avec</button>
-            <button class="btn btn-dark" name="with" value="false">Sans</button>
+            <button class="btn btn-secondary" name="article" value="1">Avec</button>
+            <button class="btn btn-dark" name="article" value="0">Sans</button>
         </form>
 
     </section>
