@@ -26,7 +26,7 @@ use App\Util\ErrorManager;
         ?>
 
         <form method="POST">
-            <label for="feed" >Flux à afficher : </label>
+            <label for="feed" >URL du flux : </label>
             <input type="text" id="feed" name="url" <?= array_key_exists('url', $_POST) ? 'value="' . $_POST['url'] . '"' : ''; ?> placeholder="Adresse du flux" required>
             <button class="btn btn-success" type="submit" formaction="?target=feed&action=url">Afficher</button>
             <button class="btn btn-primary" type="submit" formaction="?target=feed&action=add">Enregistrer</button>

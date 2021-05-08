@@ -122,7 +122,15 @@ section h2 {
 .sect-del_choice form {
     margin: 20px 0;
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
+}
+.sect-del_choice form p {
+    display: flex;
+    justify-content: space-around;
+}
+.sect-del_choice form p:last-child {
+    margin: 15px 0;
 }
 /*** Fin Section Choix de suppression ***/
 /*** Debut Section Valid ***/

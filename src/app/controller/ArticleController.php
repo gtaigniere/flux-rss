@@ -23,7 +23,7 @@ class ArticleController extends RssController
     private $articleManager;
 
     /**
-     * RssController constructor.
+     * ArticleController constructor.
      */
     public function __construct()
     {

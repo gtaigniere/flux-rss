@@ -16,7 +16,7 @@ class RssController
     private $template;
 
     /**
-     * Controller constructor.
+     * RssController constructor.
      * @param string $template
      */
     public function __construct($template = ROOT_DIR . 'view/template.php')

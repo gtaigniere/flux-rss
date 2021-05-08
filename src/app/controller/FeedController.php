@@ -125,17 +125,22 @@ class FeedController extends RssController
      */
     public function add(string $url): void
     {
-        try {
-            $feed = Feed::fromUrl($url);
-            $lastInsertFeed = $this->feedManager->insert($feed);
-            $articles = (array) $feed->getArticles();
-            foreach ($articles as $article) {
-                $article->setFeedId($lastInsertFeed->getId());
-                $this->articleManager->insert($article);
+        if ($this->checkAlreadyExists($url) === false) {
+            try {
+                $feed = Feed::fromUrl($url);
+                $lastInsertFeed = $this->feedManager->insert($feed);
+                $articles = (array) $feed->getArticles();
+                foreach ($articles as $article) {
+                    $article->setFeedId($lastInsertFeed->getId());
+                    $this->articleManager->insert($article);
+                }
+                $this->all();
+            } catch (Exception $e) {
+                ErrorManager::add($e->getMessage());
             }
-            $this->all();
-        } catch (Exception $e) {
-            ErrorManager::add($e->getMessage());
+        } else {
+            ErrorManager::add("Le flux existe déjà en base de données");
+            $this->render(ROOT_DIR . 'view/index.php', compact([]));
         }
     }
 
@@ -184,6 +189,22 @@ class FeedController extends RssController
         } else {
             $this->render(ROOT_DIR . 'view/delChoice.php', compact('id'));
         }
+    }
+
+    /**
+     * Vérifie si le flux existe déjà en base de données
+     * @param $url
+     * @return bool
+     */
+    public function checkAlreadyExists(string $url): bool
+    {
+        $feeds = $this->feedManager->all();
+        foreach($feeds as $feed) {
+            if ($feed->getFeedUrl() == $url) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
